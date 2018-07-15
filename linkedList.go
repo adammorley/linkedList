@@ -108,3 +108,20 @@ func (l *LinkedList) Search(v int) uint {
         }
     }
 }
+
+/*
+    string-i-fy a linked list
+
+    this needs improvement to ensure that the data does not overflow when the list is big (there must be some mechanism in golang to re-call the stringer function with a continuation token; if not, uh-oh)
+*/
+func (l *LinkedList) String() string {
+    var c uint = l.Length()
+    if c == 0 {
+        return ""
+    }
+    var s uint = c * (19 + 2)
+    var r = make([]rune, s, s)
+    var ln *LinkedNode = l.head
+    for {
+    }
+}
