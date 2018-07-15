@@ -21,6 +21,9 @@ func New() *LinkedList {
     return l
 }
 
+/*
+	Add to the list; goes on the back
+*/
 func (l* LinkedList) Add(v int) {
     if l.head == nil {
         var ln *LinkedNode = new(LinkedNode)
@@ -41,6 +44,20 @@ func (l* LinkedList) Add(v int) {
             return
         }
     }
+}
+
+/*
+	count the number of times a value appears in the list
+*/
+func (l* LinkedList) Count(v int) (c int) {
+	var ln *LinkedNode = l.head
+	for ln != nil {
+		if ln.val == v {
+			c++
+		}
+		ln = ln.next
+	}
+	return
 }
 
 /*

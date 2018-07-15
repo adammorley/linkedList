@@ -15,6 +15,21 @@ func TestAdd(t *testing.T) {
     }
 }
 
+func TestCount(t *testing.T) {
+	var l *LinkedList
+	l = New()
+	l.Add(5)
+	l.Add(6)
+	l.Add(5)
+	if l.Count(5) != 2 {
+		t.Error("error counting 5")
+	} else if l.Count(6) != 1 {
+		t.Error("error counting 6")
+	} else if l.Count(7) != 0 {
+		t.Error("error counting 7")
+	}
+}
+
 func TestDelete(t *testing.T) {
     var l *LinkedList
     l = New()
