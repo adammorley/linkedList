@@ -3,15 +3,21 @@
 */
 package linkedList
 
+import (
+        "strconv"
+        "strings"
+)
+
 type LinkedNode struct {
 	prev *LinkedNode
 	next *LinkedNode
-	val  int
+	val  int64
 }
 
 type LinkedList struct {
 	head *LinkedNode
 	tail *LinkedNode
+    length uint64
 }
 
 func New() *LinkedList {
@@ -24,32 +30,29 @@ func New() *LinkedList {
 /*
 	Add to the list; goes on the back
 */
-func (l *LinkedList) Add(v int) {
-	if l.head == nil {
-		var ln *LinkedNode = new(LinkedNode)
-		ln.val = v
-		l.head = ln
-		l.tail = ln
-		return
-	}
-	var ln *LinkedNode = l.head
-	for {
-		if ln.next != nil {
-			ln = ln.next
-		} else {
-			ln.next = new(LinkedNode)
-			ln.next.prev = ln
-			ln.next.val = v
-			l.tail = ln.next
-			return
-		}
-	}
+func (l *LinkedList) Add(v int64) {
+    var ln *LinkedNode = new(LinkedNode)
+    ln.val = v
+    l.length++
+    if l.head == nil {
+        l.head = ln
+        l.tail = ln
+    } else {
+        var i *LinkedNode = l.head
+        for i.next != nil {
+            i = i.next
+        }
+        i.next = ln
+        ln.prev = i
+        l.tail = ln
+    }
+    return
 }
 
 /*
 	count the number of times a value appears in the list
 */
-func (l *LinkedList) Count(v int) (c int) {
+func (l *LinkedList) Count(v int64) (c uint64) {
 	var ln *LinkedNode = l.head
 	for ln != nil {
 		if ln.val == v {
@@ -65,7 +68,7 @@ func (l *LinkedList) Count(v int) (c int) {
    list.  returns the count of the number of values
    deleted.
 */
-func (l *LinkedList) Delete(v int) bool {
+func (l *LinkedList) Delete(v int64) bool {
 	var b bool = false
 	var t *LinkedNode
 	var c *LinkedNode = l.head
@@ -83,62 +86,39 @@ func (l *LinkedList) Delete(v int) bool {
 				c.prev.next = c.next
 				c.next.prev = c.prev
 			}
+        l.length--
 		}
 		c = t
 	}
 	return b
 }
 
-func (l *LinkedList) Length() uint {
-	var t *LinkedNode = l.head
-	if t == nil {
-		return 0
-	}
-	var c uint = 0
-	for {
-		c++
-		if t.next != nil {
-			t = t.next
-		} else {
-			return c
-		}
-	}
+func (l *LinkedList) Length() uint64 {
+    return l.length
 }
 
 /*
-   Search searches for the value v and returns the count stored in the linked list
+    sort the list using a basic merge sort
 */
-func (l *LinkedList) Search(v int) uint {
-	if l.head == nil {
-		return 0
-	}
-	var c uint = 0
-	var ln *LinkedNode = l.head
-	for {
-		if ln.val == v {
-			c++
-		}
-		if ln.next == nil {
-			return c
-		} else {
-			ln = ln.next
-		}
-	}
+func (l *LinkedList) Sort() {
+
 }
 
 /*
    string-i-fy a linked list
-
-   this needs improvement to ensure that the data does not overflow when the list is big (there must be some mechanism in golang to re-call the stringer function with a continuation token; if not, uh-oh)
 */
 func (l *LinkedList) String() string {
-	var c uint = l.Length()
-	if c == 0 {
-		return ""
-	}
-	var s uint = c * (19 + 2)
-	var r = make([]rune, s, s)
-	var ln *LinkedNode = l.head
-	for {
-	}
+    var b strings.Builder
+    b.Grow(16)
+    b.WriteString("length: ")
+    b.WriteString(strconv.FormatUint(l.length, 10))
+    b.WriteString("; h:")
+    var ln *LinkedNode = l.head
+    for ln != nil {
+        b.WriteString(" -> ")
+        b.WriteString(strconv.FormatInt(ln.val, 10))
+        ln = ln.next
+    }
+    b.WriteString(" :t")
+    return b.String()
 }
