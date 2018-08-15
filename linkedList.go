@@ -4,8 +4,8 @@
 package linkedList
 
 import (
-        "strconv"
-        "strings"
+	"strconv"
+	"strings"
 )
 
 type LinkedNode struct {
@@ -15,9 +15,9 @@ type LinkedNode struct {
 }
 
 type LinkedList struct {
-	head *LinkedNode
-	tail *LinkedNode
-    length uint64
+	head   *LinkedNode
+	tail   *LinkedNode
+	length uint64
 }
 
 func New() *LinkedList {
@@ -31,22 +31,22 @@ func New() *LinkedList {
 	Add to the list; goes on the back
 */
 func (l *LinkedList) Add(v int64) {
-    var ln *LinkedNode = new(LinkedNode)
-    ln.val = v
-    l.length++
-    if l.head == nil {
-        l.head = ln
-        l.tail = ln
-    } else {
-        var i *LinkedNode = l.head
-        for i.next != nil {
-            i = i.next
-        }
-        i.next = ln
-        ln.prev = i
-        l.tail = ln
-    }
-    return
+	var ln *LinkedNode = new(LinkedNode)
+	ln.val = v
+	l.length++
+	if l.head == nil {
+		l.head = ln
+		l.tail = ln
+	} else {
+		var i *LinkedNode = l.head
+		for i.next != nil {
+			i = i.next
+		}
+		i.next = ln
+		ln.prev = i
+		l.tail = ln
+	}
+	return
 }
 
 /*
@@ -86,7 +86,7 @@ func (l *LinkedList) Delete(v int64) bool {
 				c.prev.next = c.next
 				c.next.prev = c.prev
 			}
-        l.length--
+			l.length--
 		}
 		c = t
 	}
@@ -94,11 +94,11 @@ func (l *LinkedList) Delete(v int64) bool {
 }
 
 func (l *LinkedList) Length() uint64 {
-    return l.length
+	return l.length
 }
 
 /*
-    sort the list using a basic merge sort
+   sort the list using a basic merge sort
 */
 func (l *LinkedList) Sort() {
 
@@ -108,17 +108,17 @@ func (l *LinkedList) Sort() {
    string-i-fy a linked list
 */
 func (l *LinkedList) String() string {
-    var b strings.Builder
-    b.Grow(16)
-    b.WriteString("length: ")
-    b.WriteString(strconv.FormatUint(l.length, 10))
-    b.WriteString("; h:")
-    var ln *LinkedNode = l.head
-    for ln != nil {
-        b.WriteString(" -> ")
-        b.WriteString(strconv.FormatInt(ln.val, 10))
-        ln = ln.next
-    }
-    b.WriteString(" :t")
-    return b.String()
+	var b strings.Builder
+	b.Grow(16)
+	b.WriteString("length: ")
+	b.WriteString(strconv.FormatUint(l.length, 10))
+	b.WriteString("; h:")
+	var ln *LinkedNode = l.head
+	for ln != nil {
+		b.WriteString(" -> ")
+		b.WriteString(strconv.FormatInt(ln.val, 10))
+		ln = ln.next
+	}
+	b.WriteString(" :t")
+	return b.String()
 }

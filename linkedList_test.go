@@ -3,13 +3,13 @@ package linkedList
 import "testing"
 
 func TestString(t *testing.T) {
-    var l *LinkedList
-    l = New()
-    l.Add(5)
-    l.Add(6)
-    if l.String() != "length: 2; h: -> 5 -> 6 :t" {
-        t.Error("string format changed")
-    }
+	var l *LinkedList
+	l = New()
+	l.Add(5)
+	l.Add(6)
+	if l.String() != "length: 2; h: -> 5 -> 6 :t" {
+		t.Error("string format changed")
+	}
 }
 
 func TestAdd(t *testing.T) {
@@ -74,4 +74,3 @@ func TestDelete(t *testing.T) {
 		t.Error("deleted but then found 6")
 	}
 }
-
