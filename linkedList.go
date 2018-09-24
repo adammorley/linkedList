@@ -8,10 +8,39 @@ import (
 	"strings"
 )
 
+/*
+    consumers of this package must implement the following interfaces in order for the AVL tree to order the elements of the tree.  it's critical to use a type assertion; as a type assertion can cause a panic if the types don't match, optionally one can use a type-testing assertion (eg: i, ok := j.(TYPE) if !ok ...).  however, this would require a minor modification to the Interface of this package, as it would need to allow for error handling (eg: type mismatch)
+
+type MyInt int
+
+func (i MyInt) LessThan(j interface{}) bool {
+    return i < j.(MyInt)
+}
+
+func (i MyInt) GreaterThan(j interface{}) bool {
+    return i > j.(MyInt)
+}
+
+func (i MyInt) EqualTo(j interface{}) bool {
+    return i == j.(MyInt)
+}
+
+func (i MyInt) String() string {
+    return strconv.Itoa(int(i))
+}
+*/
+
+type Interface interface {
+	LessThan(j interface{}) bool
+	GreaterThan(j interface{}) bool
+	EqualTo(j interface{}) bool
+	String() string
+}
+
 type LinkedNode struct {
 	prev *LinkedNode
 	next *LinkedNode
-	val  int
+	val  Interface
 }
 
 type LinkedList struct {
@@ -30,9 +59,9 @@ func New() (l *LinkedList) {
 /*
 	Add to the list; goes on the back
 */
-func (l *LinkedList) Add(v int) {
+func (l *LinkedList) Add(i Interface) {
 	ln := new(LinkedNode)
-	ln.val = v
+	ln.val = i
 	l.length++
 	if l.head == nil {
 		l.head = ln
@@ -52,10 +81,10 @@ func (l *LinkedList) Add(v int) {
 /*
 	count the number of times a value appears in the list
 */
-func (l *LinkedList) Count(v int) (c int) {
+func (l *LinkedList) Count(i Interface) (c int) {
 	var ln *LinkedNode = l.head
 	for ln != nil {
-		if ln.val == v {
+		if ln.val.EqualTo(i) {
 			c++
 		}
 		ln = ln.next
@@ -68,12 +97,12 @@ func (l *LinkedList) Count(v int) (c int) {
    list.  returns the count of the number of values
    deleted.
 */
-func (l *LinkedList) Delete(v int) (b bool) {
+func (l *LinkedList) Delete(i Interface) (b bool) {
 	var t *LinkedNode
 	var c *LinkedNode = l.head
 	for c != nil {
 		t = c.next
-		if c.val == v {
+		if c.val.EqualTo(i) {
 			b = true
 			if c.next == nil { // last element
 				l.tail = c.prev
@@ -142,25 +171,25 @@ func (l *LinkedList) Sort() {
 	return
 }
 func merge(list, left, right *LinkedList) {
-	lln, rln := left.head, right.head
+	ln, rn := left.head, right.head
 	head := true
 	var cur *LinkedNode
 	// go through the two lists & compare
-	for lln != nil && rln != nil {
-		if lln.val <= rln.val {
+	for ln != nil && rn != nil {
+		if ln.val.LessThan(rn.val) || ln.val.EqualTo(rn.val) {
 			if !head {
-				lln.prev = cur
-				cur.next = lln
+				ln.prev = cur
+				cur.next = ln
 			}
-			cur = lln
-			lln = lln.next
-		} else if lln.val > rln.val {
+			cur = ln
+			ln = ln.next
+		} else if ln.val.GreaterThan(rn.val) {
 			if !head {
-				rln.prev = cur
-				cur.next = rln
+				rn.prev = cur
+				cur.next = rn
 			}
-			cur = rln
-			rln = rln.next
+			cur = rn
+			rn = rn.next
 		}
 		if head {
 			list.head = cur
@@ -169,17 +198,17 @@ func merge(list, left, right *LinkedList) {
 	}
 
 	// check for leftovers
-	for lln != nil {
-		lln.prev = cur
-		cur.next = lln
-		cur = lln
-		lln = lln.next
+	for ln != nil {
+		ln.prev = cur
+		cur.next = ln
+		cur = ln
+		ln = ln.next
 	}
-	for rln != nil {
-		rln.prev = cur
-		cur.next = rln
-		cur = rln
-		rln = rln.next
+	for rn != nil {
+		rn.prev = cur
+		cur.next = rn
+		cur = rn
+		rn = rn.next
 	}
 
 	// update the tail
@@ -202,7 +231,7 @@ func (l *LinkedList) String() string {
 	var ln *LinkedNode = l.head
 	for ln != nil {
 		b.WriteString(" -> ")
-		b.WriteString(strconv.Itoa(ln.val))
+		b.WriteString(ln.val.String())
 		ln = ln.next
 	}
 	b.WriteString(" :t")
